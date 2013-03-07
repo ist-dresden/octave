@@ -47,7 +47,7 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
 
 
     private static final String FAILURE_COLOR = "#fef1ec";
-    private static final String OK_COLOUR = "#E6EEBD";
+    private static final String OK_COLOUR = "#e6eebd";
 
     @Reference
     protected TestExecutorService testExecutorService;
@@ -94,22 +94,30 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
         pw.println("    <button class='reloadButton' type='submit' name='reload'>Aktualisieren</button>");
         pw.println("</div>");
         pw.println("</form>");
-        pw.println("<table id='plugin_table' class='tablesorter nicetable noauto'>");
-        pw.println("<thead>" +
+        pw.println("<table id='plugin_table' class='nicetable noauto' style='table-layout:fixed;'>");
+        pw.println("<thead class='ui-widget-header'>" +
                 "<tr>" +
-                    "<th class='col_Test'>Test</th>" +
-                    "<th class='col_Result'>Result</th>" +
+                    "<th class='col_Test' style='width: 40em'>Test</th>" +
+                    "<th class='col_Result' style='width: 20em'>Result</th>" +
                     "<th class='col_Trace'>Trace</th>" +
                 "</tr></thead>");
-        pw.println("<tbody>");
+        pw.println("<tbody class='ui-widget-content'>");
+        int testNr = 0;
         for (Result result:runTests) {
+            testNr++;
             if(result.isSuccess()) {
                 pw.println("<tr class='ok' style='background-color: " + OK_COLOUR + ";'>");
-                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>ok</td><td>&nbsp;</td>");
+                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>ok</td><td style='overflow:hidden;text-overflow: elipsis;'>&nbsp;</td>");
                 pw.println("</tr>");
             } else {
                 pw.println("<tr class='failure' style='background-color: " + FAILURE_COLOR + ";'>");
-                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>"+result.getFailure().getMessage()+"</td><td><pre>"+result.getFailure().getTrace()+"</pre></td>");
+                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>"+result.getFailure().getMessage()+"</td>" +
+                        "<td style='overflow:hidden;text-overflow: elipsis;'>" +
+                        "<div id='test-detail-button-"+testNr+"' class='detailButton bIcon ui-icon ui-icon-triangle-1-e' title='Show Details'>&nbsp;</div>" +
+                        "<div id='test-detail-"+testNr+"' style='display: none;'>" +
+                        "<pre>"+result.getFailure().getTrace()+"</pre>" +
+                        "</div>" +
+                                "</td>");
                 pw.println("</tr>");
             }
         }
@@ -117,6 +125,7 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
         pw.println("</table>");
         pw.println("<div class='ui-widget-header ui-corner-bottom buttonGroup'>&nbsp;</div>");
         pw.println("<p class='statline'>&nbsp;</p>");
+        pw.println("<script src='/system/console/octave/res/octave.js'></script>");
     }
 
 }
