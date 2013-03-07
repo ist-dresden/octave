@@ -17,7 +17,7 @@
  * Eisenstuckstraße 10, 01069 Dresden, Germany
  * All rights reserved.
  *
- * Name: JUnit4TestExecuterServiceImpl.java
+ * Name: JUnit4TestExecutorServiceImpl.java
  * Autor: Mirko Zeibig
  * Datum: 21.01.2013 16:38:43
  */
@@ -41,7 +41,7 @@ import org.osgi.service.component.ComponentContext;
  */
 @Component
 @Service
-public class JUnit4TestExecuterServiceImpl implements TestExecuterService {
+public class JUnit4TestExecutorServiceImpl implements TestExecutorService {
 
     @Reference(cardinality=ReferenceCardinality.OPTIONAL_MULTIPLE,
             name="TestCase", referenceInterface=TestService.class)

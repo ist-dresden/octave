@@ -17,7 +17,7 @@
  * Eisenstuckstraße 10, 01069 Dresden, Germany
  * All rights reserved.
  *
- * Name: TestExecuterService.java
+ * Name: TestExecutorService.java
  * Autor: Mirko Zeibig
  * Datum: 22.01.2013 08:11:08
  */
@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author Mirko Zeibig
  */
-public interface TestExecuterService {
+public interface TestExecutorService {
 
     /**
      * Runs all found tests.

@@ -34,7 +34,7 @@ import org.apache.felix.scr.annotations.*;
 import org.apache.felix.webconsole.SimpleWebConsolePlugin;
 
 import com.composum.osgi.core.test.Result;
-import com.composum.osgi.core.test.TestExecuterService;
+import com.composum.osgi.core.test.TestExecutorService;
 
 /**
  * @author Mirko Zeibig
@@ -50,7 +50,7 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
     private static final String OK_COLOUR = "#E6EEBD";
 
     @Reference
-    protected TestExecuterService testExecuterService;
+    protected TestExecutorService testExecutorService;
 
     public TestuiWebConsolePlugin() {
         super("octave", "Octave", null);
@@ -61,12 +61,12 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
      */
     @Override
     protected void renderContent(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (testExecuterService == null) {
+        if (testExecutorService == null) {
             PrintWriter pw = res.getWriter();
-            pw.println("<p class='statline'>No TestExecuterService found!</p>");
+            pw.println("<p class='statline'>No TestExecutorService found!</p>");
             return;
         }
-        List<Result> runTests = testExecuterService.runTests();
+        List<Result> runTests = testExecutorService.runTests();
         int fc = 0;
         for(Result r: runTests) {
             if (!r.isSuccess()) {
