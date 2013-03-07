@@ -62,7 +62,6 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
     @Override
     protected void renderContent(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (testExecuterService == null) {
-            //testExecuterService = (TestExecuterService) getService("com.composum.osgi.core.test.JUnit4TestExecuterServiceImpl");
             PrintWriter pw = res.getWriter();
             pw.println("<p class='statline'>No TestExecuterService found!</p>");
             return;
@@ -119,15 +118,5 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
         pw.println("<div class='ui-widget-header ui-corner-bottom buttonGroup'>&nbsp;</div>");
         pw.println("<p class='statline'>&nbsp;</p>");
     }
-
-//    @Override
-//    public String getLabel() {
-//        return "octave";
-//    }
-//
-//    @Override
-//    public String getTitle() {
-//        return "Octave";
-//    }
 
 }
