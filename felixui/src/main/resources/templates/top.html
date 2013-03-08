@@ -1,0 +1,19 @@
+<p class='statline'>Overall: ${successRate}%</p>
+<div class='resultBar'>
+    <div class='failureBar'>
+        <div class='okBar' style='width: ${successRate}%;'></div>
+    </div>
+</div>
+<form method='get' enctype='multipart/form-data' action='/system/console/octave'>
+    <div class='ui-widget-header ui-corner-top buttonGroup'>
+        <button class='reloadButton' type='submit' name='reload'>Reload</button>
+    </div>
+</form>
+
+<table id='plugin_table' class='nicetable noauto'>
+    <thead class='ui-widget-header'>
+        <tr>
+            <th class='col_Test'>Test</th>
+            <th class='col_Result'>Result</th>
+            <th class='col_Trace'>Trace</th>
+        </tr></thead>

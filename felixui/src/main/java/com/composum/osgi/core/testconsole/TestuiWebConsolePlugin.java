@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.felix.scr.annotations.*;
+import org.apache.felix.webconsole.DefaultVariableResolver;
 import org.apache.felix.webconsole.SimpleWebConsolePlugin;
+import org.apache.felix.webconsole.WebConsoleUtil;
 
 import com.composum.osgi.core.test.Result;
 import com.composum.osgi.core.test.TestExecutorService;
@@ -56,43 +58,30 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
      * @see org.apache.felix.webconsole.AbstractWebConsolePlugin#renderContent(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected void renderContent(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    protected void renderContent(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
         if (testExecutorService == null) {
-            PrintWriter pw = res.getWriter();
+            final PrintWriter pw = res.getWriter();
             pw.println("<p class='statline'>No TestExecutorService found!</p>");
             return;
         }
-        List<Result> runTests = testExecutorService.runTests();
+        final List<Result> runTests = testExecutorService.runTests();
         int fc = 0;
-        for(Result r: runTests) {
+        for(final Result r: runTests) {
             if (!r.isSuccess()) {
                 fc++;
             }
         }
-        int successRate = runTests.size() > 0 ? 100 - (fc * 100 / runTests.size()) : 0;
+        final int successRate = runTests.size() > 0 ? 100 - (fc * 100 / runTests.size()) : 0;
 
-        PrintWriter pw = res.getWriter();
-        pw.println("<p class='statline'>Overall: "+successRate+"%</p>");
-        pw.println("<div class='resultBar'>");
-        pw.println("    <div class='failureBar'>");
-        pw.println("        <div class='okBar' style='width: "+successRate+"%;'></div>");
-        pw.println("    </div>");
-        pw.println("</div>");
-        pw.println("<form method='get' enctype='multipart/form-data' action='/system/console/octave'>");
-        pw.println("<div class='ui-widget-header ui-corner-top buttonGroup'>");
-        pw.println("    <button class='reloadButton' type='submit' name='reload'>Reload</button>");
-        pw.println("</div>");
-        pw.println("</form>");
-        pw.println("<table id='plugin_table' class='nicetable noauto'>");
-        pw.println("<thead class='ui-widget-header'>" +
-                "<tr>" +
-                    "<th class='col_Test'>Test</th>" +
-                    "<th class='col_Result'>Result</th>" +
-                    "<th class='col_Trace'>Trace</th>" +
-                "</tr></thead>");
+        final PrintWriter pw = res.getWriter();
+        final String topTemplate = readTemplateFile("/templates/top.html");
+        final String bottomTemplate = readTemplateFile("/templates/bottom.html");
+        ((DefaultVariableResolver) WebConsoleUtil.getVariableResolver(req)).put("successRate", successRate);
+
+        pw.println(topTemplate);
         pw.println("<tbody class='ui-widget-content'>");
         int testNr = 0;
-        for (Result result:runTests) {
+        for (final Result result:runTests) {
             testNr++;
             if(result.isSuccess()) {
                 pw.println("<tr class='ok'>");
@@ -100,21 +89,18 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
                 pw.println("</tr>");
             } else {
                 pw.println("<tr class='failure'>");
-                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>"+result.getFailure().getMessage()+"</td>" +
-                        "<td>" +
-                        "<div id='test-detail-button-"+testNr+"' class='detailButton bIcon ui-icon ui-icon-triangle-1-e' title='Show Details'>&nbsp;</div>" +
-                        "<div id='test-detail-"+testNr+"' style='display: none;'>" +
-                        "<pre>"+result.getFailure().getTrace()+"</pre>" +
-                        "</div>" +
-                                "</td>");
+                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>"+result.getFailure().getMessage()+"</td>");
+                pw.println("    <td>");
+                pw.println("        <div id='test-detail-button-"+testNr+"' class='detailButton bIcon ui-icon ui-icon-triangle-1-e' title='Show Details'>&nbsp;</div>");
+                pw.println("        <div id='test-detail-"+testNr+"' style='display: none;'>");
+                pw.println("            <pre>"+result.getFailure().getTrace()+"</pre>");
+                pw.println("        </div>");
+                pw.println("    </td>");
                 pw.println("</tr>");
             }
         }
         pw.println("</tbody>");
-        pw.println("</table>");
-        pw.println("<div class='ui-widget-header ui-corner-bottom buttonGroup'>&nbsp;</div>");
-        pw.println("<p class='statline'>&nbsp;</p>");
-        pw.println("<script src='/system/console/octave/res/octave.js'></script>");
+        pw.println(bottomTemplate);
     }
 
 }
