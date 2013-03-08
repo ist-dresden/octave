@@ -45,15 +45,11 @@ import com.composum.osgi.core.test.TestExecutorService;
 @Property(name="felix.webconsole.label", value="octave")
 public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
 
-
-    private static final String FAILURE_COLOR = "#fef1ec";
-    private static final String OK_COLOUR = "#e6eebd";
-
     @Reference
     protected TestExecutorService testExecutorService;
 
     public TestuiWebConsolePlugin() {
-        super("octave", "Octave", null);
+        super("octave", "Octave", new String[]{"/octave/res/octave.css"});
     }
 
     /**
@@ -77,28 +73,21 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
 
         PrintWriter pw = res.getWriter();
         pw.println("<p class='statline'>Overall: "+successRate+"%</p>");
-        pw.println("<div style='margin-bottom: 5px;'>");
-        pw.println("    <div class=\"failureBar\" " +
-                "style='background-color: " + FAILURE_COLOR + "; " +
-                    "border: #9c9c9c 1px solid;" +
-                    "height: 12px;" +
-                    "width: 100%;'>");
-        pw.println("        <div class=\"okBar\" " +
-                "style=\"width: "+successRate+"%;" +
-                        "background-color: " + OK_COLOUR + ";" +
-                        "height: 12px;\"></div>");
+        pw.println("<div class='resultBar'>");
+        pw.println("    <div class='failureBar'>");
+        pw.println("        <div class='okBar' style='width: "+successRate+"%;'></div>");
         pw.println("    </div>");
         pw.println("</div>");
         pw.println("<form method='get' enctype='multipart/form-data' action='/system/console/octave'>");
         pw.println("<div class='ui-widget-header ui-corner-top buttonGroup'>");
-        pw.println("    <button class='reloadButton' type='submit' name='reload'>Aktualisieren</button>");
+        pw.println("    <button class='reloadButton' type='submit' name='reload'>Reload</button>");
         pw.println("</div>");
         pw.println("</form>");
-        pw.println("<table id='plugin_table' class='nicetable noauto' style='table-layout:fixed;'>");
+        pw.println("<table id='plugin_table' class='nicetable noauto'>");
         pw.println("<thead class='ui-widget-header'>" +
                 "<tr>" +
-                    "<th class='col_Test' style='width: 40em'>Test</th>" +
-                    "<th class='col_Result' style='width: 20em'>Result</th>" +
+                    "<th class='col_Test'>Test</th>" +
+                    "<th class='col_Result'>Result</th>" +
                     "<th class='col_Trace'>Trace</th>" +
                 "</tr></thead>");
         pw.println("<tbody class='ui-widget-content'>");
@@ -106,13 +95,13 @@ public class TestuiWebConsolePlugin extends SimpleWebConsolePlugin {
         for (Result result:runTests) {
             testNr++;
             if(result.isSuccess()) {
-                pw.println("<tr class='ok' style='background-color: " + OK_COLOUR + ";'>");
-                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>ok</td><td style='overflow:hidden;text-overflow: elipsis;'>&nbsp;</td>");
+                pw.println("<tr class='ok'>");
+                pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>ok</td><td>&nbsp;</td>");
                 pw.println("</tr>");
             } else {
-                pw.println("<tr class='failure' style='background-color: " + FAILURE_COLOR + ";'>");
+                pw.println("<tr class='failure'>");
                 pw.println("    <td>"+result.getDescription().getDisplayName()+"</td><td>"+result.getFailure().getMessage()+"</td>" +
-                        "<td style='overflow:hidden;text-overflow: elipsis;'>" +
+                        "<td>" +
                         "<div id='test-detail-button-"+testNr+"' class='detailButton bIcon ui-icon ui-icon-triangle-1-e' title='Show Details'>&nbsp;</div>" +
                         "<div id='test-detail-"+testNr+"' style='display: none;'>" +
                         "<pre>"+result.getFailure().getTrace()+"</pre>" +
