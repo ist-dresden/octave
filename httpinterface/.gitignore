@@ -1,0 +1,9 @@
+# Eclipse
+.project
+.classpath
+.settings
+.metadata
+target
+# Mac OS X
+._*
+.DS_*

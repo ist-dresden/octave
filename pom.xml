@@ -19,6 +19,7 @@
 		      <module>framework</module>
 		      <module>example</module>
     		  <module>felixui</module>
+    		  <module>httpinterface</module>
    	</modules>
 
 </project>
