@@ -66,41 +66,47 @@ public class OctaveMojo extends AbstractMojo {
     private boolean skipTests;
 
     /**
+     * If set to true, no tests are executed at all.
+     */
+    @Parameter(property = "maven.test.skip", defaultValue = "false")
+    private boolean mavenTestSkip;
+
+    /**
      * If set to true, test failures are ignored.
      */
     @Parameter(property="maven.test.failure.ignore", defaultValue = "false")
     private boolean mavenTestFailureIgnore;
 
     /**
-     * unused
+     * unused. NYI
      */
     @Parameter(property="octave.username", required=false)
     private String username;
 
     /**
-     * unused
+     * unused. NYI
      */
     @Parameter(property="octave.password", required=false)
     private String passowrd;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if(skipTests) {
+        if(skipTests || mavenTestSkip) {
             getLog().info("Skipping all Octave tests, because 'skipTests' is set to true.");
         } else {
             getLog().info("running Octave tests @" + url);
             try {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpget = new HttpGet(new URI(url.toString()));
-                HttpResponse response = httpclient.execute(httpget);
-                StatusLine statusLine = response.getStatusLine();
+                final HttpClient httpclient = new DefaultHttpClient();
+                final HttpGet httpget = new HttpGet(new URI(url.toString()));
+                final HttpResponse response = httpclient.execute(httpget);
+                final StatusLine statusLine = response.getStatusLine();
                 getLog().debug(statusLine.toString());
-                HttpEntity entity = response.getEntity();
+                final HttpEntity entity = response.getEntity();
                 if (entity != null) {
                     try (InputStream instream = entity.getContent())  {
-                        Result result = new Gson().fromJson(new InputStreamReader(instream), Result.class);
+                        final Result result = new Gson().fromJson(new InputStreamReader(instream), Result.class);
                         boolean failed = false;
-                        for (Test test: result.tests) {
+                        for (final Test test: result.tests) {
                             getLog().info(" * name: " + test.name + ", success: " + test.success);
                             failed |= test.success;
                         }
