@@ -31,22 +31,12 @@
         <relativePath>../.parent</relativePath>
     </parent>
 
-    <groupId>com.composum.octave</groupId>
     <artifactId>octave.httpinterface</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>Octave Test HTTP interface</name>
     <description>HTTP interface for integrationtests</description>
-
-    <organization>
-        <name>IST GmbH Dresden</name>
-        <url>http://www.ist-software.com/</url>
-    </organization>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <resources>

@@ -14,7 +14,7 @@
   limitations under the License.
 
   IST GmbH Dresden
-  Eisenstuckstraße 10, 01069 Dresden, Germany
+  Eisenstuckstraï¿½e 10, 01069 Dresden, Germany
   All rights reserved.
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
@@ -31,10 +31,34 @@
     <name>Octave Parent</name>
     <description>Maven parent for Octave projects</description>
 
+    <url>https://github.com/ist-dresden/octave</url>
+
+    <issueManagement>
+        <url>https://github.com/ist-dresden/octave/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <organization>
         <name>IST GmbH Dresden</name>
         <url>http://www.ist-software.com/</url>
     </organization>
+
+    <scm>
+        <url>https://github.com/ist-dresden/octave</url>
+        <connection>scm:git:git://github.com/ist-dresden/octave.git</connection>
+        <developerConnection>scm:git:git@github.com:ist-dresden/octave.git</developerConnection>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <prerequisites>
         <maven>3.0.4</maven>

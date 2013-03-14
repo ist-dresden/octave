@@ -31,23 +31,22 @@
         <relativePath>../.parent</relativePath>
     </parent>
 
-    <groupId>com.composum.octave</groupId>
     <artifactId>octave-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Octave Maven Plugin</name>
 
-    <organization>
-        <name>IST GmbH Dresden</name>
-        <url>http://www.ist-software.com/</url>
-    </organization>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <build>
+        <resources>
+            <resource>
+                <targetPath>META-INF</targetPath>
+                <directory>${basedir}/..</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -87,7 +86,7 @@
                 </execution>
             </executions>
  -->            <configuration>
-<!--                 <url>file:/abc</url> -->
+<!--                 <url>http://localhost:4502/integrationtests</url> -->
             </configuration>
             </plugin>
         </plugins>
@@ -110,6 +109,5 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
-
     </dependencies>
 </project>
