@@ -59,37 +59,61 @@ public class OctaveMojo extends AbstractMojo {
     @Parameter(property="octave.url", defaultValue="http://localhost:8080/testrunner")
     private URL url;
 
+    /**
+     * If set to true, no tests are executed at all.
+     */
+    @Parameter(property = "skipTests", defaultValue = "false")
+    private boolean skipTests;
+
+    /**
+     * If set to true, test failures are ignored.
+     */
+    @Parameter(property="maven.test.failure.ignore", defaultValue = "false")
+    private boolean mavenTestFailureIgnore;
+
+    /**
+     * unused
+     */
     @Parameter(property="octave.username", required=false)
     private String username;
 
+    /**
+     * unused
+     */
     @Parameter(property="octave.password", required=false)
     private String passowrd;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("running Octave tests @" + url);
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpGet httpget = new HttpGet(new URI(url.toString()));
-            HttpResponse response = httpclient.execute(httpget);
-            StatusLine statusLine = response.getStatusLine();
-            getLog().debug(statusLine.toString());
-            HttpEntity entity = response.getEntity();
-            if (entity != null) {
-                try (InputStream instream = entity.getContent())  {
-                    Result result = new Gson().fromJson(new InputStreamReader(instream), Result.class);
-                    boolean failed = false;
-                    for (Test test: result.tests) {
-                        getLog().info("name: " + test.name + ", success: " + test.success);
-                        failed |= test.success;
-                    }
-                    if (failed) {
-                        throw new MojoFailureException("Octave tests failed.");
+        if(skipTests) {
+            getLog().info("Skipping all Octave tests, because 'skipTests' is set to true.");
+        } else {
+            getLog().info("running Octave tests @" + url);
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet httpget = new HttpGet(new URI(url.toString()));
+                HttpResponse response = httpclient.execute(httpget);
+                StatusLine statusLine = response.getStatusLine();
+                getLog().debug(statusLine.toString());
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    try (InputStream instream = entity.getContent())  {
+                        Result result = new Gson().fromJson(new InputStreamReader(instream), Result.class);
+                        boolean failed = false;
+                        for (Test test: result.tests) {
+                            getLog().info(" * name: " + test.name + ", success: " + test.success);
+                            failed |= test.success;
+                        }
+                        if (failed && !mavenTestFailureIgnore) {
+                            throw new MojoFailureException("Octave tests failed.");
+                        } else if (failed && mavenTestFailureIgnore) {
+                            getLog().warn("Octave test failures ignored, because 'maven.test.failure.ignore' is set to true.");
+                        }
                     }
                 }
+            } catch (IOException | URISyntaxException e) {
+                throw new MojoExecutionException("Error executing Octave tests: " + e.getMessage(), e);
             }
-        } catch (IOException | URISyntaxException e) {
-            throw new MojoExecutionException("Error executing Octave tests: " + e.getMessage(), e);
         }
     }
 
